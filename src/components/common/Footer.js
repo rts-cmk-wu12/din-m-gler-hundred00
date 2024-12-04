@@ -1,6 +1,7 @@
 import { FaPaperPlane } from "react-icons/fa6";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { MdLocalPhone } from "react-icons/md";
+import Link from "next/link";
 
 export default function Footer() {
     return (
@@ -41,10 +42,10 @@ export default function Footer() {
                     <div className="flex flex-col justify-between flex-1">
                         <div className="text-gray-700 text-lg flex flex-col gap-3">
                             <h6 className="text-gray-800 text-2xl font-semibold pb-3">Quick Links</h6>
-                            <a href="/">Boliger til salg</a>
-                            <a href="/">Mæglere</a>
-                            <a href="/">Kontakt os</a>
-                            <a href="/">Log ind / bliv bruger</a>
+                            <Link href="/search">Boliger til salg</Link>
+                            <Link href="/">Mæglere</Link>
+                            <Link href="/">Kontakt os</Link>
+                            <Link href="/login">Log ind / bliv bruger</Link>
                         </div>
                         <div className="text-gray-500">
                             <p className="text-sm">Medlem af<br/><span className="font-bold text-3xl">DMS</span><br/><span className="text-base">Dansk Mægler Sammenslutning</span></p>

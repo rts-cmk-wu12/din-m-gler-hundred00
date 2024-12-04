@@ -73,7 +73,7 @@ export default function SearchPage() {
                     {!isLoading &&
                         homes.length > 0 &&
                         homes.map((home) => (
-                            <ResultFrame key={home.id} includeFavourite={true} data={home} />
+                            <ResultFrame key={home.id} type={"search"} includeFavourite={true} data={home} />
                         ))}
                 </section>
             </article>

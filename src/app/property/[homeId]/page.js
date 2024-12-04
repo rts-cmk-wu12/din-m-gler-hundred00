@@ -48,11 +48,11 @@ export default function PropertyPage({ params }) {
     }, [homeId])
 
     if (isLoading) {
-        return <StatusMessage messageText = "Indlæser hus detaljer..." messageIcon = "loading" />
+        return <StatusMessage messageText = "Indlæser bolig detaljer..." messageIcon = "loading" />
     }
 
     if (!home) {
-        return <StatusMessage messageText = "Kunne ikke finde hus nummer..." messageIcon = "error" />
+        return <StatusMessage messageText = "Kunne ikke finde bolig nummer..." messageIcon = "error" />
     }
 
     return (

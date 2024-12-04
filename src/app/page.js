@@ -12,6 +12,7 @@ import { BsFillHouseFill } from "react-icons/bs";
 import { LiaBuilding } from "react-icons/lia";
 import { GiTakeMyMoney } from "react-icons/gi";
 import { FaArrowRightLong } from "react-icons/fa6";
+import Link from "next/link";
 
 export default function Home() {
   const [featuredHomes, setFeaturedHomes] = useState([])
@@ -151,12 +152,12 @@ export default function Home() {
           {!isLoadingHomes &&
             featuredHomes.length > 0 &&
             featuredHomes.map((home) => (
-              <ResultFrame key={home.id} includeFavourite={false} data={home} />
+              <ResultFrame key={home.id} type={"search"} includeFavourite={false} data={home} />
             ))}
         </section>
-        <a href="/search" className="py-4 px-8 mt-10 mb-24 rounded-sm text-white bg-commonBlue">
+        <Link href="/search" className="py-4 px-8 mt-10 mb-24 rounded-sm text-white bg-commonBlue">
           Se alle boliger
-        </a>
+        </Link>
       </article>
 
       <article className="flex justify-center items-center relative w-full py-20 px-96">

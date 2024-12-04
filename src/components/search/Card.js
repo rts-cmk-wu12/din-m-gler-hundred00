@@ -18,7 +18,7 @@ export default function Card() {
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Søg på fx. glaskeramisk komfur, bryggers, kælder eller lignende"
-                    className="px-4 py-2 border border-gray-300 w-full rounded-[0.160rem] text-sm"/>
+                    className="px-4 py-2 border border-gray-300 w-full rounded-[0.160rem] text-sm" />
                 <button
                     type="submit"
                     className="px-10 py-[0.70rem] text-white bg-commonBlue rounded-[0.160rem] text-sm">
