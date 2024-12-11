@@ -1,7 +1,8 @@
 import { cookies } from "next/headers"
 
 export async function GET() {
-    const token = cookies().get("auth_token")?.value
+    const cookieStore = await cookies()
+    const token = cookieStore.get("auth_token")?.value
 
     if (!token) {
         return new Response(JSON.stringify({ error: "no access" }), {
@@ -19,7 +20,7 @@ export async function GET() {
         })
 
         if (!response.ok) {
-            return new Response(JSON.stringify({ error: "failed to get user details" }), {
+            return new Response(JSON.stringify({ error: "failed to fetch user details" }), {
                 status: response.status,
                 headers: { "Content-Type": "application/json" }
             })
@@ -28,10 +29,11 @@ export async function GET() {
         const data = await response.json()
         return new Response(JSON.stringify(data), {
             status: 200,
-            headers: { "Content-Type": "application/json" }
+            headers: { "Content-Type": "application/json" },
         })
     } catch (error) {
-        return new Response(JSON.stringify({ error: "Internal Server Error" }), {
+        console.error("Error fetching user:", error)
+        return new Response(JSON.stringify({ error: "internal server error" }), {
             status: 500,
             headers: { "Content-Type": "application/json" }
         })

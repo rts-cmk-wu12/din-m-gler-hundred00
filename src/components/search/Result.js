@@ -26,7 +26,8 @@ export default function ResultFrame({ type, includeFavourite, data = {} }) {
 
     const backgroundImageUrl = data?.images?.[0]?.url || "/images/placeholder.jpg"
 
-    const propertyId = data?.id ? `/property/${data.id}` : "/search"
+    const propertyId = data?.id || "0"
+    const propertyUrl = data?.id ? `/property/${propertyId}` : "/search"
 
     if (type === "search") {
         return (
@@ -34,7 +35,7 @@ export default function ResultFrame({ type, includeFavourite, data = {} }) {
                 {includeFavourite && ( // favourite button does not show up on the home page but it does show up on the search page or what i am calling the search page
                     <FavouriteButton type={"search"} homeId={propertyId}/>
                 )}
-                <Link href={propertyId}>
+                <Link href={propertyUrl}>
                     <div className="w-full min-h-40 bg-cover bg-center rounded-t-sm"
                         style={{ backgroundImage: `url(${backgroundImageUrl})` }} />
                     <section className="flex flex-col gap-2 text-sm p-5">
@@ -61,7 +62,7 @@ export default function ResultFrame({ type, includeFavourite, data = {} }) {
     if (type === "favourites") {
         return (
             <article className="bg-white rounded-sm border-[1px] border-gray-200 shadow-sm hover:scale-[1.01] duration-200 w-full p-8">
-                <Link href={propertyId}>
+                <Link href={propertyUrl}>
                     <div className="grid grid-cols-4 gap-4">
                         <div className="w-full min-h-28 bg-cover bg-center rounded-t-sm"
                             style={{ backgroundImage: `url(${backgroundImageUrl})` }} />

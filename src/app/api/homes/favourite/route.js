@@ -1,69 +1,91 @@
 import { cookies } from "next/headers"
 
 export async function PUT(request) {
-    const cookieStore = await cookies()
-    const token = cookieStore.get("auth_token")?.value
-
-    if (!token) {
-        return new Response(JSON.stringify({ error: "unauthorized" }), {
-            status: 401,
-            headers: { "Content-Type": "application/json" }
-        })
-    }
-
     try {
-        const { homeId } = await request.json()
+        const cookieStore = await cookies()
+        const token = cookieStore.get("auth_token")?.value
+        const userId = cookieStore.get("user_id")?.value
 
+        if (!token || !userId) {
+            return new Response(
+                JSON.stringify({ error: "missing access token or user id" }),
+                {
+                    status: 401,
+                    headers: { "Content-Type": "application/json" }
+                }
+            )
+        }
+
+        const { homeId } = await request.json()
         if (!homeId) {
-            return new Response(JSON.stringify({ error: "home ID is required" }), {
-                status: 400,
-                headers: { "Content-Type": "application/json" }
-            })
+            return new Response(
+                JSON.stringify({ error: "homeId is required" }),
+                {
+                    status: 400,
+                    headers: { "Content-Type": "application/json" }
+                }
+            )
         }
 
         const userResponse = await fetch("https://dinmaegler.onrender.com/users/me", {
             method: "GET",
             headers: {
-                Authorization: `Bearer ${token}`
-            }
+                Authorization: `Bearer ${token}`,
+            },
         })
 
         if (!userResponse.ok) {
-            return new Response(JSON.stringify({ error: "failed to fetch user details" }), {
-                status: userResponse.status,
-                headers: { "Content-Type": "application/json" }
-            })
+            console.error("failed to fetch user data:", await userResponse.text())
+            return new Response(
+                JSON.stringify({ error: "failed to fetch user data" }),
+                {
+                    status: userResponse.status,
+                    headers: { "Content-Type": "application/json" }
+                }
+            )
         }
 
-        const user = await userResponse.json()
+        const userData = await userResponse.json()
+        const currentFavorites = userData.homes || []
 
-        const updatedHomes = [...new Set([...(user.homes || []), homeId])]
+        // duplication prevention
+        const updatedFavorites = [...new Set([...currentFavorites, homeId])]
 
-        const updateResponse = await fetch(`https://dinmaegler.onrender.com/users/${user.id}`, {
+        const updateResponse = await fetch(`https://dinmaegler.onrender.com/users/${userId}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({ homes: updatedHomes })
+            body: JSON.stringify({ homes: updatedFavorites }),
         })
 
         if (!updateResponse.ok) {
-            return new Response(JSON.stringify({ error: "failed to update favorites" }), {
-                status: updateResponse.status,
-                headers: { "Content-Type": "application/json" }
-            })
+            console.error("failed to update favorites:", await updateResponse.text())
+            return new Response(
+                JSON.stringify({ error: "failed to update favorites" }),
+                {
+                    status: updateResponse.status,
+                    headers: { "Content-Type": "application/json" },
+                }
+            )
         }
 
-        return new Response(JSON.stringify({ success: true }), {
-            status: 200,
-            headers: { "Content-Type": "application/json" }
-        })
+        return new Response(
+            JSON.stringify({ message: "favorites updated successfully" }),
+            {
+                status: 200,
+                headers: { "Content-Type": "application/json" },
+            }
+        )
     } catch (error) {
-        console.error("Error updating favorites:", error)
-        return new Response(JSON.stringify({ error: "Internal Server Error" }), {
-            status: 500,
-            headers: { "Content-Type": "application/json" }
-        })
+        console.error("error updating favorites:", error)
+        return new Response(
+            JSON.stringify({ error: "internal server error" }),
+            {
+                status: 500,
+                headers: { "Content-Type": "application/json" },
+            }
+        )
     }
 }

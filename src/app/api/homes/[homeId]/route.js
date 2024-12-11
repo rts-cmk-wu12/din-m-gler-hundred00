@@ -1,5 +1,5 @@
 export async function GET(request, context) {
-    const { homeId } = context.params
+    const { homeId } = await context.params
 
     if (!homeId) {
         return new Response(JSON.stringify({ error: "home id is required" }), {

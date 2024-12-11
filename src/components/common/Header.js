@@ -1,30 +1,23 @@
 "use client"
 
 import Link from "next/link"
+import { useCookies } from "react-cookie"
 import { FaPaperPlane, FaUser } from "react-icons/fa6"
 import { MdLocalPhone } from "react-icons/md"
 import { useEffect, useState } from "react"
 
 export default function Header() {
-    const [user, setUser] = useState(null)
+    const [cookies, setCookie, removeCookie] = useCookies(["auth_token"])
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
 
     useEffect(() => {
-        async function fetchUser() {
-            try {
-                const response = await fetch("/api/auth/user", {
-                    method: "GET"
-                })
-                if (response.ok) {
-                    const data = await response.json()
-                    setUser(data)
-                }
-            } catch (error) {
-                console.error("error fetching user:", error)
-            }
-        }
+        setIsLoggedIn(!!cookies.auth_token)
+    }, [cookies])
 
-        fetchUser()
-    }, [])
+    const handleLogout = () => {
+        removeCookie("auth_token", { path: "/" })
+        setIsLoggedIn(false)
+    }
 
     return (
         <header>
@@ -41,8 +34,8 @@ export default function Header() {
                 </section>
                 <section className="flex items-center gap-2">
                     <FaUser color="white" size={15} />
-                    {user ? (
-                        <span>{user.username}</span>
+                    {isLoggedIn ? (
+                        <button onClick={handleLogout} className="bg-red-500 text-white py-1 px-3 rounded-md">Log Ud</button>
                     ) : (
                         <Link href="/login">Log ind</Link>
                     )}
@@ -58,7 +51,7 @@ export default function Header() {
                 <nav className="text-[#333333] flex gap-8">
                     <Link href="/search">Boliger til salg</Link>
                     <Link href="/agents">Mæglere</Link>
-                    <Link href="/favorites">Mine favoritter</Link>
+                    <Link href="/favourites">Mine favoritter</Link>
                     <Link href="/contact">Kontakt os</Link>
                 </nav>
             </article>

@@ -16,10 +16,7 @@ export async function POST(request) {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                identifier: email,
-                password
-            })
+            body: JSON.stringify({ identifier: email, password })
         })
 
         if (!response.ok) {
@@ -33,10 +30,39 @@ export async function POST(request) {
         const data = await response.json()
         const { jwt } = data
 
-        cookies().set("auth_token", jwt, { maxAge: 60 * 60, httpOnly: true })
+        const userResponse = await fetch("https://dinmaegler.onrender.com/users/me", {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${jwt}`
+            }
+        })
+
+        if (!userResponse.ok) {
+            return new Response(JSON.stringify({ error: "failed to fetch user data" }), {
+                status: userResponse.status,
+                headers: { "Content-Type": "application/json" }
+            })
+        }
+
+        const userData = await userResponse.json()
+        const { id: userId } = userData
+
+        const cookieStore = cookies()
+        cookieStore.set("auth_token", jwt, {
+            maxAge: 60 * 60,
+            httpOnly: true,
+            path: "/"
+        })
+        cookieStore.set("user_id", userId, {
+            maxAge: 60 * 60,
+            httpOnly: true,
+            path: "/"
+        })
+
         return new Response(null, { status: 204 })
     } catch (error) {
-        return new Response(JSON.stringify({ error: "Internal Server Error" }), {
+        console.error("error during login: ", error)
+        return new Response(JSON.stringify({ error: "internal server error" }), {
             status: 500,
             headers: { "Content-Type": "application/json" }
         })
