@@ -1,22 +1,36 @@
 "use client"
 
 import Link from "next/link"
-import { useCookies } from "react-cookie"
 import { FaPaperPlane, FaUser } from "react-icons/fa6"
 import { MdLocalPhone } from "react-icons/md"
 import { useEffect, useState } from "react"
 
 export default function Header() {
-    const [cookies, setCookie, removeCookie] = useCookies(["auth_token"])
     const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        setIsLoggedIn(!!cookies.auth_token)
-    }, [cookies])
+        const checkAuth = async () => {
+            try {
+                const response = await fetch("/api/auth/user", { method: "GET" })
+                if (response.ok) {
+                    setIsLoggedIn(true)
+                } else {
+                    setIsLoggedIn(false)
+                }
+            } catch (error) {
+                console.error("error checking auth:", error)
+                setIsLoggedIn(false)
+            } finally {
+                setLoading(false)
+            }
+        }
 
-    const handleLogout = () => {
-        removeCookie("auth_token", { path: "/" })
-        setIsLoggedIn(false)
+        checkAuth()
+    }, [])
+
+    const handleLogout = async () => {
+        console.log("logging out")
     }
 
     return (
@@ -35,12 +49,18 @@ export default function Header() {
                 <section className="flex items-center gap-2">
                     <FaUser color="white" size={15} />
                     {isLoggedIn ? (
-                        <button onClick={handleLogout} className="bg-red-500 text-white py-1 px-3 rounded-md">Log Ud</button>
+                        <button
+                            onClick={handleLogout}
+                            className="bg-red-500 text-white py-1 px-3 rounded-md"
+                        >
+                            Log Ud
+                        </button>
                     ) : (
                         <Link href="/login">Log ind</Link>
                     )}
                 </section>
             </article>
+
             <article className="bg-white flex items-center justify-between py-3 px-80 text-md">
                 <Link href="/">
                     <section className="text-commonBlue font-bold flex items-baseline text-4xl gap-2">
