@@ -47,7 +47,7 @@ export async function POST(request) {
         const userData = await userResponse.json()
         const { id: userId } = userData
 
-        const cookieStore = cookies()
+        const cookieStore = await cookies()
         cookieStore.set("auth_token", jwt, {
             maxAge: 60 * 60,
             httpOnly: true,

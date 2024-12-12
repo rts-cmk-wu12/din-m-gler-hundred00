@@ -1,18 +1,18 @@
 "use client"
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 import Card from "@/components/search/Card";
 import ResultFrame from "@/components/search/Result";
 import EmployeeCard from "@/components/misc/EmployeeCard";
 import StatusMessage from "@/components/common/StatusMessage";
+import NewsletterSignup from "@/components/misc/NewsletterSignup";
 
 import { FaHandHoldingUsd, FaMapMarkerAlt, FaGooglePlay, FaApple } from "react-icons/fa";
 import { BsFillHouseFill } from "react-icons/bs";
 import { LiaBuilding } from "react-icons/lia";
 import { GiTakeMyMoney } from "react-icons/gi";
-import { FaArrowRightLong } from "react-icons/fa6";
-import Link from "next/link";
 
 export default function Home() {
   const [featuredHomes, setFeaturedHomes] = useState([])
@@ -39,7 +39,7 @@ export default function Home() {
 
     async function fetchAgents() {
       try {
-        const response = await fetch("/api/agents/all-agents?limit=6")
+        const response = await fetch("/api/agents/all-agents?limit=3")
         if (!response.ok) {
           console.error("failed to fetch agents")
           return
@@ -160,24 +160,7 @@ export default function Home() {
         </Link>
       </article>
 
-      <article className="flex justify-center items-center relative w-full py-20 px-96">
-        <div className="bg-newsletter-image bg-fit w-full h-full absolute opacity-10 z-20" />
-        <div className="bg-slate-700 w-full h-full absolute z-10" />
-        <section className="flex gap-5 z-30 items-center justify-center">
-          <h5 className="text-2xl font-semibold text-white">Tilmeld dig vores nyhedsbrev og hold dig opdateret på boligmarkedet</h5>
-          <div className="relative w-full max-w-sm">
-            <input
-              type="email"
-              placeholder="Indtast din email adresse"
-              className="w-full pl-4 pr-20 py-4 text-sm border border-gray-400 rounded-sm" />
-            <button
-              type="button"
-              className="absolute inset-y-0 right-3 flex items-center justify-center">
-              <FaArrowRightLong size={22} />
-            </button>
-          </div>
-        </section>
-      </article>
+      <NewsletterSignup/>
 
       <article className="bg-gray-100 flex flex-col justify-between items-center gap-5">
         <section className="flex flex-col items-center text-center gap-6 px-[32rem] pt-24 pb-11">
@@ -194,9 +177,9 @@ export default function Home() {
             agents.length > 0 &&
             agents.map((agent) => <EmployeeCard key={agent.id} data={agent} />)}
         </section>
-        <button className="py-4 px-8 mt-10 mb-24 rounded-sm text-white bg-commonBlue">
+        <Link href="/agents" className="py-4 px-8 mt-10 mb-24 rounded-sm text-white bg-commonBlue">
           Se alle mæglere
-        </button>
+        </Link>
       </article>
 
       <article className="flex justify-center items-center gap-10 relative w-full pt-20 px-72 bg-commonBlue text-white">

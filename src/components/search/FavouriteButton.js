@@ -1,60 +1,39 @@
-import { useState, useEffect } from "react"
 import { FaRegHeart, FaHeart } from "react-icons/fa"
 
-export default function FavouriteButton({ type, homeId }) {
-    const [isFavorited, setIsFavorited] = useState(false)
-    const [allFavorites, setAllFavorites] = useState([])
-
-    useEffect(() => {
-        const fetchFavorites = async () => {
-            try {
-                const response = await fetch("/api/auth/user", { method: "GET" })
-
-                if (!response.ok) {
-                    throw new Error("failed to fetch user data.")
-                }
-
-                const userData = await response.json()
-                const favorites = userData.homes || []
-                setAllFavorites(favorites)
-
-                if (favorites.includes(homeId)) {
-                    setIsFavorited(true)
-                }
-            } catch (error) {
-                console.error("error fetching favorites:", error)
-            }
-        }
-
-        fetchFavorites()
-    }, [homeId])
-
-    const handleToggleFavorite = async () => {
-        try {
-            const updatedFavorites = isFavorited
-                ? allFavorites.filter((id) => id !== homeId)
-                : [...allFavorites, homeId]
-
-            const response = await fetch("/api/homes/favourite", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ homeId })
-            })
-
-            if (!response.ok) {
-                throw new Error("failed to update favorites.")
-            }
-
-            setAllFavorites(updatedFavorites)
-            setIsFavorited(!isFavorited)
-        } catch (error) {
-            console.error("error toggling favorite status:", error)
-        }
+export default function FavouriteButton({ type, homeId, userFavorites = [], setUserFavorites }) {
+    if (type === "favourites") {
+        return (
+            <button className="text-white bg-commonBlue p-4 rounded-base font-semibold">
+                Fjern fra favoritter
+            </button>
+        )
     }
 
     if (type === "search") {
+        const isFavorited = userFavorites.includes(homeId)
+
+        const handleToggleFavorite = async () => {
+            try {
+                const updatedFavorites = isFavorited
+                    ? userFavorites.filter((id) => id !== homeId)
+                    : [...userFavorites, homeId]
+
+                const response = await fetch("/api/homes/favourite", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ homeId }),
+                })
+
+                if (!response.ok) {
+                    throw new Error("failed to update favorites.")
+                }
+
+                setUserFavorites(updatedFavorites)
+            } catch (error) {
+                console.error("error toggling favorite status:", error)
+            }
+        }
+
         return (
             <button
                 onClick={(e) => {
@@ -70,20 +49,6 @@ export default function FavouriteButton({ type, homeId }) {
                 ) : (
                     <FaRegHeart className="fill-black hover:fill-white w-full h-full duration-150" />
                 )}
-            </button>
-        )
-    }
-
-    if (type === "favourites") {
-        return (
-            <button
-                onClick={(e) => {
-                    e.stopPropagation()
-                    console.log("meh")
-                }}
-                className="text-white bg-commonBlue p-4 rounded-base font-semibold"
-            >
-                Fjern fra favoritter
             </button>
         )
     }

@@ -10,7 +10,7 @@ const energyLabelColors = { // i tried to use tailwind for this by adding these 
     D: "#EB5757",
 }
 
-export default function ResultFrame({ type, includeFavourite, data = {} }) {
+export default function ResultFrame({ type, includeFavourite, data = {}, userFavorites, setUserFavorites }) {
     const address = data?.adress1 || "Klosterengen 234"
     const city = data?.city || "Roskilde"
     const postalCode = data?.postalcode || "4000"
@@ -33,7 +33,7 @@ export default function ResultFrame({ type, includeFavourite, data = {} }) {
         return (
             <article className="bg-white rounded-lg shadow-sm hover:scale-[1.01] duration-200">
                 {includeFavourite && ( // favourite button does not show up on the home page but it does show up on the search page or what i am calling the search page
-                    <FavouriteButton type={"search"} homeId={propertyId}/>
+                    <FavouriteButton type={"search"} homeId={propertyId} userFavorites={userFavorites} setUserFavorites={setUserFavorites} />
                 )}
                 <Link href={propertyUrl}>
                     <div className="w-full min-h-40 bg-cover bg-center rounded-t-sm"
@@ -85,7 +85,7 @@ export default function ResultFrame({ type, includeFavourite, data = {} }) {
                         </section>
                         <section className="flex flex-col justify-between">
                             <p className="font-semibold text-lg text-end">Kr. {formatNumber(price)}</p>
-                            <FavouriteButton type={"favourites"} homeId={propertyId}/>
+                            <FavouriteButton type={"favourites"} homeId={propertyId} />
                         </section>
                     </div>
                 </Link>

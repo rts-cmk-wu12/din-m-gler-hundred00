@@ -1,6 +1,6 @@
 export async function GET(request, context) {
     const { params } = await context
-    const { agentId } = params
+    const { agentId } = await params
 
     if (!agentId) {
         return new Response(JSON.stringify({ error: "no agent id provided" }), {

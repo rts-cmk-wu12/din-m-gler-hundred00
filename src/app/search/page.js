@@ -1,13 +1,14 @@
 "use client"
 
-import { useEffect, useState } from "react";
-import TitleHeader from "@/components/common/TitleHeader";
-import ResultFrame from "@/components/search/Result";
-import SearchOptions from "@/components/search/SearchOptions";
-import StatusMessage from "@/components/common/StatusMessage";
+import { useEffect, useState } from "react"
+import TitleHeader from "@/components/common/TitleHeader"
+import ResultFrame from "@/components/search/Result"
+import SearchOptions from "@/components/search/SearchOptions"
+import StatusMessage from "@/components/common/StatusMessage"
 
 export default function SearchPage() {
     const [homes, setHomes] = useState([])
+    const [userFavorites, setUserFavorites] = useState([])
     const [isLoading, setIsLoading] = useState(true)
 
     const dropdownOptions = ["Alle", "Villa", "Ejerlejlighed", "Byhus", "Landejendom"]
@@ -47,8 +48,23 @@ export default function SearchPage() {
         }
     }
 
+    const fetchUserFavorites = async () => { // we will store this information and send it out to the components so they can refer to it. better than having to fetch user for each favouritebutton
+        try {
+            const response = await fetch("/api/auth/user")
+            if (!response.ok) {
+                throw new Error("failed to fetch user data")
+            }
+
+            const userData = await response.json()
+            setUserFavorites(userData.homes || [])
+        } catch (error) {
+            console.error("error fetching user favorites:", error)
+        }
+    }
+
     useEffect(() => {
         fetchHomes()
+        fetchUserFavorites()
     }, [filters])
 
     return (
@@ -73,7 +89,7 @@ export default function SearchPage() {
                     {!isLoading &&
                         homes.length > 0 &&
                         homes.map((home) => (
-                            <ResultFrame key={home.id} type={"search"} includeFavourite={true} data={home} />
+                            <ResultFrame key={home.id} type={"search"} includeFavourite={true} data={home} userFavorites={userFavorites} setUserFavorites={setUserFavorites}/>
                         ))}
                 </section>
             </article>

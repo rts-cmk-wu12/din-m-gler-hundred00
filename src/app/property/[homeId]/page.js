@@ -8,6 +8,7 @@ import { FiMapPin, FiHeart } from "react-icons/fi";
 
 import AgentCard from "@/components/misc/AgentCard";
 import StatusMessage from "@/components/common/StatusMessage";
+import ImageViewer from "@/components/search/ImageViewer";
 
 import { formatNumber } from "@/utils/formatNumber";
 
@@ -15,6 +16,9 @@ export default function PropertyPage({ params }) {
     const [homeId, setHomeId] = useState(null)
     const [home, setHome] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
+    const [isImageViewerVisible, setIsImageViewerVisible] = useState(false)
+    const [backgroundImageUrl, setBackgroundImageUrl] = useState("")
+    const [isFavorited, setIsFavorited] = useState(false)
 
     useEffect(() => {
         async function unwrapParams() {
@@ -37,6 +41,7 @@ export default function PropertyPage({ params }) {
 
                 const data = await response.json()
                 setHome(data)
+                setBackgroundImageUrl(data.images?.[0]?.url || '/images/placeholder.jpg')
             } catch (error) {
                 console.error("Error fetching home:", error)
             } finally {
@@ -47,38 +52,64 @@ export default function PropertyPage({ params }) {
         fetchHome()
     }, [homeId])
 
+    useEffect(() => {
+        if (!homeId) return
+
+        async function checkIfFavorited() {
+            try {
+                const response = await fetch("/api/auth/user", { method: "GET" })
+                if (!response.ok) {
+                    console.error("Failed to fetch user data")
+                    return
+                }
+
+                const userData = await response.json()
+                const favoriteHomes = userData.homes || []
+                const isHomeFavorited = favoriteHomes.some((home) => home === homeId || home.id === homeId)
+
+                setIsFavorited(isHomeFavorited)
+            } catch (error) {
+                console.error("error checking favorites:", error)
+            }
+        }
+
+        checkIfFavorited()
+    }, [homeId])
+
     if (isLoading) {
-        return <StatusMessage messageText = "Indlæser bolig detaljer..." messageIcon = "loading" />
+        return <StatusMessage messageText="Indlæser bolig detaljer..." messageIcon="loading" />
     }
 
     if (!home) {
-        return <StatusMessage messageText = "Kunne ikke finde bolig nummer..." messageIcon = "error" />
+        return <StatusMessage messageText="Kunne ikke finde bolig nummer..." messageIcon="error" />
     }
 
     return (
         <main>
+            <ImageViewer visible={isImageViewerVisible} onClose={() => setIsImageViewerVisible(false)} data={home} favourited={isFavorited} />
             <article className="relative py-80 px-[30rem]">
                 <div
-                    className="absolute inset-0 bg-cover bg-center"
-                    style={{ backgroundImage: `url(${home.images?.[0]?.url || '/images/placeholder.jpg'})` }}
+                    className="absolute inset-0 bg-cover bg-center cursor-pointer"
+                    style={{ backgroundImage: `url(${backgroundImageUrl})` }}
+                    onClick={() => setIsImageViewerVisible(true)}
                 ></div>
             </article>
             <article className="px-80 pb-60 flex flex-col gap-7">
                 <section className="flex flex-col py-10">
                     <div className="flex justify-between">
-                        <h2 className="text-lg font-semibold">{home.adress1 || "Unknown Address"}</h2>
+                        <h2 className="text-lg font-semibold">{home.adress1 || "N/A"}</h2>
                         <div className="flex gap-10">
-                            <button>
+                            <button onClick={() => setBackgroundImageUrl(home.images?.[0]?.url || '/images/placeholder.jpg')}>
                                 <HiOutlinePhoto color="#7B7B7B" size={50} />
                             </button>
-                            <button>
+                            <button onClick={() => setBackgroundImageUrl(home.floorplan?.url || '/images/placeholder.jpg')}>
                                 <IoLayersOutline color="#7B7B7B" size={50} />
                             </button>
                             <button>
                                 <FiMapPin color="#7B7B7B" size={50} />
                             </button>
                             <button>
-                                <FiHeart color="#7B7B7B" size={50} />
+                                <FiHeart color={isFavorited ? "red" : "#7B7B7B"} size={50} />
                             </button>
                         </div>
                         <h3 className="text-2xl font-semibold">
