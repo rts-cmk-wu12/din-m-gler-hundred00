@@ -106,7 +106,7 @@ export default function PropertyPage({ params }) {
                             <button onClick={() => setBackgroundImageUrl(home.floorplan?.url || '/images/placeholder.jpg')}>
                                 <IoLayersOutline color="#7B7B7B" size={50} />
                             </button>
-                            <button>
+                            <button  onClick={() => setBackgroundImageUrl('/images/image-viewer/map-mockup.jpg')}>
                                 <FiMapPin color="#7B7B7B" size={50} />
                             </button>
                             <FavouriteButton type={"imageViewer"} setUserFavorites={isFavorited} homeId={home.id} />

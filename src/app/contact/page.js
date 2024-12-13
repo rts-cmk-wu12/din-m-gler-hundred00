@@ -40,6 +40,7 @@ export default function contactPage() {
                     </div>
                 </section>
             </article>
+            <img src="/images/contact/map-background.jpg" className="mt-10"/>
         </main>
     )
 }

@@ -13,6 +13,7 @@ export default function ImageViewer({ visible, onClose, data = {}, favourited })
 
     const mainImageUrl = data?.images?.[0]?.url || "/images/placeholder.jpg"
     const floorplanImageUrl = data?.floorplan?.url || "/images/placeholder.jpg"
+    const mapImageUrl = "/images/image-viewer/map-mockup.jpg"
 
     const [currentImageUrl, setCurrentImageUrl] = useState(mainImageUrl)
     const [currentIndex, setCurrentIndex] = useState(0)
@@ -31,7 +32,7 @@ export default function ImageViewer({ visible, onClose, data = {}, favourited })
     }
 
     const handleImageClick = (url) => {
-        if (url === floorplanImageUrl) {
+        if (url === floorplanImageUrl || url === mapImageUrl) {
             setShowArrows(false)
         } else {
             setShowArrows(true)
@@ -73,7 +74,7 @@ export default function ImageViewer({ visible, onClose, data = {}, favourited })
                         <button onClick={() => handleImageClick(floorplanImageUrl)}>
                             <IoLayersOutline color="#7B7B7B" size={50} />
                         </button>
-                        <button>
+                        <button  onClick={() => handleImageClick(mapImageUrl)}>
                             <FiMapPin color="#7B7B7B" size={50} />
                         </button>
                         <FavouriteButton type={"imageViewer"} setUserFavorites={favourited} homeId={data.id} />
