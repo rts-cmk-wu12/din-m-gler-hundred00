@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { formatNumber } from "@/utils/formatNumber";
+
 import FavouriteButton from "./FavouriteButton";
 
 const energyLabelColors = { // i tried to use tailwind for this by adding these in the config but the color would not update dynamically even when the style was changed. as this is the only components these are used on however it should be fine to just have them here unless i find a better way

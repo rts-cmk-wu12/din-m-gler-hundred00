@@ -1,14 +1,15 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import TitleHeader from "@/components/common/TitleHeader"
-import ResultFrame from "@/components/search/Result"
-import SearchOptions from "@/components/search/SearchOptions"
-import StatusMessage from "@/components/common/StatusMessage"
+import { useEffect, useState } from "react";
+
+import TitleHeader from "@/components/common/TitleHeader";
+import ResultFrame from "@/components/search/Result";
+import SearchOptions from "@/components/search/SearchOptions";
+import StatusMessage from "@/components/common/StatusMessage";
 
 export default function SearchPage() {
     const [homes, setHomes] = useState([])
-    const [userFavorites, setUserFavorites] = useState([])
+    const [userFavorites, setUserFavorites] = useState([]) // there is a "users" array in every home that i could check, and i tried. but i stored my userid in a cookie and trying to grab the cookie caused tons and tons of issues, so i am sticking with this option.
     const [isLoading, setIsLoading] = useState(true)
 
     const dropdownOptions = ["Alle", "Villa", "Ejerlejlighed", "Byhus", "Landejendom"]
@@ -67,6 +68,7 @@ export default function SearchPage() {
         fetchUserFavorites()
     }, [filters])
 
+
     return (
         <main>
             <TitleHeader title={"Boliger til salg"} />
@@ -89,7 +91,7 @@ export default function SearchPage() {
                     {!isLoading &&
                         homes.length > 0 &&
                         homes.map((home) => (
-                            <ResultFrame key={home.id} type={"search"} includeFavourite={true} data={home} userFavorites={userFavorites} setUserFavorites={setUserFavorites}/>
+                            <ResultFrame key={home.id} type={"search"} includeFavourite={true} data={home} userFavorites={userFavorites} setUserFavorites={setUserFavorites} />
                         ))}
                 </section>
             </article>

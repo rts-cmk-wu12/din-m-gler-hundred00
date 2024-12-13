@@ -5,6 +5,7 @@ import { z } from "zod"
 import { useRouter } from "next/navigation"
 import StatusMessage from "@/components/common/StatusMessage"
 import Link from "next/link"
+import TitleHeader from "@/components/common/TitleHeader"
 
 const loginSchema = z.object({
     email: z.string().email("Ugyldig email"),
@@ -58,6 +59,7 @@ export default function LoginPage() {
 
     return (
         <main>
+            <TitleHeader title="Account Login" />
             <article className="flex items-center justify-center py-24 px-[35rem]">
                 <section className="bg-white py-14 px-36 border-gray-200 border-[1px] rounded-sm shadow-sm flex items-center justify-center flex-col gap-10 w-full">
                     <h2 className="text-center text-2xl text-commonBlue font-semibold">Log ind på din konto</h2>
