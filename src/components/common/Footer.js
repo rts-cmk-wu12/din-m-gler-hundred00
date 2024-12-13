@@ -5,6 +5,7 @@ import Link from "next/link";
 
 export default function Footer() {
     return (
+        // i didnt use grid. arghhh ohh the humanity
         <footer className="bg-gray-100 px-96 pt-20 mb-44">
             <div>
                 <section className="flex flex-col gap-5">

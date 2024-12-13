@@ -1,5 +1,5 @@
 
-// it might have worked. wouldnt know because google wont let me use the api no matter what i try. unfortunate
+// it might have worked. wouldnt know because google wont let me use the api no matter what i try. unfortunate but i refuse to delete it so it shows that i did in fact try.
 
 import { useEffect, useRef, useMemo, useState } from "react"
 import dynamic from "next/dynamic"
