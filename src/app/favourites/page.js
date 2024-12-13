@@ -69,15 +69,15 @@ export default function FavouritesPage() {
     }
 
     if (loading) {
-        return <StatusMessage type="loading" message="Indlæser dine boliger..." />
+        return <StatusMessage messageIcon="loading" messageText="Indlæser dine boliger..." />
     }
 
     if (error) {
-        return <StatusMessage type="error" message={`Fejl: ${error}`} />
+        return <StatusMessage messageIcon="error" messageText={`Fejl: ${error}`} />
     }
 
     if (allFavorites.length === 0) {
-        return <StatusMessage type="info" message="Du har ikke nogen favoritboliger." />
+        return <StatusMessage messageIcon="error" messageText="Du har ikke nogen favoritboliger." />
     }
 
     return (

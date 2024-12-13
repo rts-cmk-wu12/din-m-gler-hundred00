@@ -6,6 +6,7 @@ import { HiOutlinePhoto } from "react-icons/hi2"
 import { IoLayersOutline } from "react-icons/io5"
 import { FiMapPin, FiHeart } from "react-icons/fi"
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6"
+import FavouriteButton from "./FavouriteButton"
 
 export default function ImageViewer({ visible, onClose, data = {}, favourited }) {
     if (!visible) return null
@@ -75,9 +76,7 @@ export default function ImageViewer({ visible, onClose, data = {}, favourited })
                         <button>
                             <FiMapPin color="#7B7B7B" size={50} />
                         </button>
-                        <button>
-                            <FiHeart color={favourited ? "red" : "#7B7B7B"} size={50} />
-                        </button>
+                        <FavouriteButton type={"imageViewer"} setUserFavorites={favourited} homeId={data.id} />
                     </div>
                 </div>
             </div>

@@ -1,26 +1,40 @@
+"use client"
+
 import { FaRegHeart, FaHeart } from "react-icons/fa";
+import { FiHeart } from "react-icons/fi";
+import { useState } from "react";
 
 export default function FavouriteButton({ type, homeId, userFavorites = [], setUserFavorites, handleRemove }) {
-    const isFavorited = userFavorites.includes(homeId)
+    const [internalFavorited, setInternalFavorited] = useState(
+        typeof setUserFavorites === "boolean" ? setUserFavorites : userFavorites.includes(homeId)
+    )
+
+    const isFavorited = typeof setUserFavorites === "boolean" 
+        ? internalFavorited 
+        : userFavorites.includes(homeId)
 
     const handleToggleFavorite = async () => {
         try {
-            const updatedFavorites = isFavorited
-                ? userFavorites.filter((id) => id !== homeId)
-                : [...userFavorites, homeId]
+            const updatedFavorites = typeof setUserFavorites === "boolean"
+                ? !isFavorited
+                : isFavorited
+                    ? userFavorites.filter((id) => id !== homeId)
+                    : [...userFavorites, homeId]
 
             const response = await fetch("/api/homes/favourite", {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ homeId, action: isFavorited ? "remove" : "add" }),
+                body: JSON.stringify({ homeId, action: isFavorited ? "remove" : "add" })
             })
 
             if (!response.ok) {
                 throw new Error("failed to update favorites.")
             }
 
-            if (type === "search" && setUserFavorites) {
+            if (typeof setUserFavorites === "function") {
                 setUserFavorites(updatedFavorites)
+            } else {
+                setInternalFavorited(!isFavorited)
             }
         } catch (error) {
             console.error("error toggling favorite status:", error)
@@ -73,6 +87,19 @@ export default function FavouriteButton({ type, homeId, userFavorites = [], setU
                 ) : (
                     <FaRegHeart className="fill-black hover:fill-white w-full h-full duration-150" />
                 )}
+            </button>
+        )
+    }
+
+    if (type === "imageViewer") {
+        return (
+            <button
+                onClick={(e) => {
+                    e.stopPropagation()
+                    handleToggleFavorite()
+                }}
+                className="p-2 flex items-center justify-center duration-150">
+                <FiHeart color={isFavorited ? "red" : "#7B7B7B"} size={50} />
             </button>
         )
     }

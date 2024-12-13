@@ -11,6 +11,7 @@ import StatusMessage from "@/components/common/StatusMessage";
 import ImageViewer from "@/components/search/ImageViewer";
 
 import { formatNumber } from "@/utils/formatNumber";
+import FavouriteButton from "@/components/search/FavouriteButton";
 
 export default function PropertyPage({ params }) {
     const [homeId, setHomeId] = useState(null)
@@ -108,9 +109,7 @@ export default function PropertyPage({ params }) {
                             <button>
                                 <FiMapPin color="#7B7B7B" size={50} />
                             </button>
-                            <button>
-                                <FiHeart color={isFavorited ? "red" : "#7B7B7B"} size={50} />
-                            </button>
+                            <FavouriteButton type={"imageViewer"} setUserFavorites={isFavorited} homeId={home.id} />
                         </div>
                         <h3 className="text-2xl font-semibold">
                             Kr. {formatNumber(home.price || 0)}

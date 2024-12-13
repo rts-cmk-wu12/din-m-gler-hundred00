@@ -70,7 +70,7 @@ export default function Home() {
       <article className="bg-white py-24 px-[22rem] flex flex-col">
         <section className="flex gap-32 justify-center">
           <div className="relative">
-            <img src="/images/home/family-front.jpg" alt="Et billede af en glad familie" className="w-full h-auto min-w-[22rem]" />
+            <img src="/images/home/family-front.jpg" alt="Et billede af two smilende forældre og deres barn." className="w-full h-auto min-w-[22rem]" />
             <div className="absolute inset-0">
               <div className="flex items-center justify-center border-[10px] border-commonBlue h-full relative top-8 left-8">
                 <div className="p-4 bg-commonBlue text-white text-center w-[50%] aspect-square relative top-24 left-[5.5rem] flex flex-col justify-center items-center">
@@ -194,8 +194,8 @@ export default function Home() {
         </section>
         <section className="flex-[0.8]">
           <div className="relative w-full max-w-sm">
-            <img src="/images/home/phone-1.png" alt="Telefon" className="absolute z-20 left-40" />
-            <img src="/images/home/phone-2.png" alt="Telefon" className="relative z-30" />
+            <img src="/images/home/phone-1.png" alt="Et billede af en telefon" className="absolute z-20 left-40" />
+            <img src="/images/home/phone-2.png" alt="Et billede af en telefon" className="relative z-30" />
           </div>
         </section>
       </article>
