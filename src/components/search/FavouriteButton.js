@@ -1,36 +1,50 @@
-import { FaRegHeart, FaHeart } from "react-icons/fa"
+import { FaRegHeart, FaHeart } from "react-icons/fa";
 
-export default function FavouriteButton({ type, homeId, userFavorites = [], setUserFavorites }) {
-    if (type === "favourites") {
-        return (
-            <button className="text-white bg-commonBlue p-4 rounded-base font-semibold">
-                Fjern fra favoritter
-            </button>
-        )
+export default function FavouriteButton({ type, homeId, userFavorites = [], setUserFavorites, handleRemove }) {
+    const isFavorited = userFavorites.includes(homeId)
+
+    const handleToggleFavorite = async () => {
+        try {
+            const updatedFavorites = isFavorited
+                ? userFavorites.filter((id) => id !== homeId)
+                : [...userFavorites, homeId]
+
+            const response = await fetch("/api/homes/favourite", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ homeId, action: isFavorited ? "remove" : "add" }),
+            })
+
+            if (!response.ok) {
+                throw new Error("failed to update favorites.")
+            }
+
+            if (type === "search" && setUserFavorites) {
+                setUserFavorites(updatedFavorites)
+            }
+        } catch (error) {
+            console.error("error toggling favorite status:", error)
+        }
     }
 
-    if (type === "search") {
-        const isFavorited = userFavorites.includes(homeId)
-
-        const handleToggleFavorite = async () => {
+    if (type === "favourites") {
+        const handleRemoveFavorite = async () => {
             try {
-                const updatedFavorites = isFavorited
-                    ? userFavorites.filter((id) => id !== homeId)
-                    : [...userFavorites, homeId]
-
                 const response = await fetch("/api/homes/favourite", {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ homeId }),
+                    body: JSON.stringify({ homeId, action: "remove" }),
                 })
 
                 if (!response.ok) {
-                    throw new Error("failed to update favorites.")
+                    throw new Error("failed to remove favorite.")
                 }
 
-                setUserFavorites(updatedFavorites)
+                if (handleRemove) {
+                    handleRemove(homeId)
+                }
             } catch (error) {
-                console.error("error toggling favorite status:", error)
+                console.error("error removing favorite:", error)
             }
         }
 
@@ -38,12 +52,22 @@ export default function FavouriteButton({ type, homeId, userFavorites = [], setU
             <button
                 onClick={(e) => {
                     e.stopPropagation()
+                    handleRemoveFavorite()
+                }}
+                className="text-white bg-commonBlue p-4 rounded-base font-semibold">
+                Fjern fra favoritter
+            </button>
+        )
+    }
+
+    if (type === "search") {
+        return (
+            <button
+                onClick={(e) => {
+                    e.stopPropagation()
                     handleToggleFavorite()
                 }}
-                className={`absolute p-2 flex items-center justify-center ml-[22rem] mt-2 rounded-full duration-150 ${
-                    isFavorited ? "bg-red-500" : "bg-white hover:bg-red-500"
-                }`}
-            >
+                className={`absolute p-2 flex items-center justify-center ml-[22rem] mt-2 rounded-full duration-150 ${isFavorited ? "bg-red-500" : "bg-white hover:bg-red-500"}`}>
                 {isFavorited ? (
                     <FaHeart className="fill-white w-full h-full" />
                 ) : (

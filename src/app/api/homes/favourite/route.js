@@ -1,4 +1,4 @@
-import { cookies } from "next/headers"
+import { cookies } from "next/headers";
 
 export async function PUT(request) {
     try {
@@ -16,10 +16,11 @@ export async function PUT(request) {
             )
         }
 
-        const { homeId } = await request.json()
-        if (!homeId) {
+        const { homeId, action } = await request.json()
+
+        if (!homeId || !["add", "remove"].includes(action)) {
             return new Response(
-                JSON.stringify({ error: "homeId is required" }),
+                JSON.stringify({ error: "homeId and valid action ('add' or 'remove') are required" }),
                 {
                     status: 400,
                     headers: { "Content-Type": "application/json" }
@@ -30,8 +31,8 @@ export async function PUT(request) {
         const userResponse = await fetch("https://dinmaegler.onrender.com/users/me", {
             method: "GET",
             headers: {
-                Authorization: `Bearer ${token}`,
-            },
+                Authorization: `Bearer ${token}`
+            }
         })
 
         if (!userResponse.ok) {
@@ -48,16 +49,20 @@ export async function PUT(request) {
         const userData = await userResponse.json()
         const currentFavorites = userData.homes || []
 
-        // duplication prevention
-        const updatedFavorites = [...new Set([...currentFavorites, homeId])]
+        let updatedFavorites
+        if (action === "add") {
+            updatedFavorites = [...new Set([...currentFavorites, homeId])] // add homeid
+        } else if (action === "remove") {
+            updatedFavorites = currentFavorites.filter((id) => id !== homeId) // remove homeid
+        }
 
         const updateResponse = await fetch(`https://dinmaegler.onrender.com/users/${userId}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify({ homes: updatedFavorites }),
+            body: JSON.stringify({ homes: updatedFavorites })
         })
 
         if (!updateResponse.ok) {
@@ -66,7 +71,7 @@ export async function PUT(request) {
                 JSON.stringify({ error: "failed to update favorites" }),
                 {
                     status: updateResponse.status,
-                    headers: { "Content-Type": "application/json" },
+                    headers: { "Content-Type": "application/json" }
                 }
             )
         }
@@ -75,7 +80,7 @@ export async function PUT(request) {
             JSON.stringify({ message: "favorites updated successfully" }),
             {
                 status: 200,
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json" }
             }
         )
     } catch (error) {
@@ -84,7 +89,7 @@ export async function PUT(request) {
             JSON.stringify({ error: "internal server error" }),
             {
                 status: 500,
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json" }
             }
         )
     }

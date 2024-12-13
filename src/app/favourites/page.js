@@ -51,6 +51,12 @@ export default function FavouritesPage() {
         fetchFavorites()
     }, [])
 
+    const handleRemoveFavorite = (homeId) => {
+        const updatedFavorites = allFavorites.filter((home) => home.id !== homeId)
+        setAllFavorites(updatedFavorites)
+        setFilteredFavorites(updatedFavorites)
+    }
+
     const handleSearch = (e) => {
         const query = e.target.value.toLowerCase()
         setSearchQuery(query)
@@ -95,7 +101,7 @@ export default function FavouritesPage() {
 
                 <section className="w-full grid grid-cols-1 gap-4">
                     {filteredFavorites.map((home) => (
-                        <ResultFrame key={home.id} type="favourites" includeFavourite={true} data={home} />
+                        <ResultFrame key={home.id} type="favourites" includeFavourite={true} data={home} handleRemove={handleRemoveFavorite} />
                     ))}
                 </section>
             </article>

@@ -10,7 +10,7 @@ const energyLabelColors = { // i tried to use tailwind for this by adding these 
     D: "#EB5757",
 }
 
-export default function ResultFrame({ type, includeFavourite, data = {}, userFavorites, setUserFavorites }) {
+export default function ResultFrame({ type, includeFavourite, data = {}, userFavorites, setUserFavorites, handleRemove }) {
     const address = data?.adress1 || "Klosterengen 234"
     const city = data?.city || "Roskilde"
     const postalCode = data?.postalcode || "4000"
@@ -62,33 +62,33 @@ export default function ResultFrame({ type, includeFavourite, data = {}, userFav
     if (type === "favourites") {
         return (
             <article className="bg-white rounded-sm border-[1px] border-gray-200 shadow-sm hover:scale-[1.01] duration-200 w-full p-8">
-                <Link href={propertyUrl}>
-                    <div className="grid grid-cols-4 gap-4">
+                <div className="grid grid-cols-4 gap-4">
+                    <Link href={propertyUrl}>
                         <div className="w-full min-h-28 bg-cover bg-center rounded-t-sm"
                             style={{ backgroundImage: `url(${backgroundImageUrl})` }} />
-                        <section>
-                            <div className="flex flex-col gap-2">
-                                <p className="text-base font-semibold">{address}</p>
-                                <p>{city} {postalCode}</p>
-                                <p className="font-semibold text-lg">{houseType} •
-                                    <span className="text-sm"> Ejerudgift: {formatNumber(ownershipExspanse)} kr.</span>
-                                </p>
+                    </Link>
+                    <section>
+                        <div className="flex flex-col gap-2">
+                            <p className="text-base font-semibold">{address}</p>
+                            <p>{city} {postalCode}</p>
+                            <p className="font-semibold text-lg">{houseType} •
+                                <span className="text-sm"> Ejerudgift: {formatNumber(ownershipExspanse)} kr.</span>
+                            </p>
+                        </div>
+                    </section>
+                    <section>
+                        <div className="flex gap-5 items-center">
+                            <div className={"p-2 aspect-square max-w-7 max-h-7 flex justify-center items-center text-start"} style={{ backgroundColor: energyLabelClass }}>
+                                <p className="text-white font-semibold leading-none text-lg">{energyLabel}</p>
                             </div>
-                        </section>
-                        <section>
-                            <div className="flex gap-5 items-center">
-                                <div className={"p-2 aspect-square max-w-7 max-h-7 flex justify-center items-center text-start"} style={{ backgroundColor: energyLabelClass }}>
-                                    <p className="text-white font-semibold leading-none text-lg">{energyLabel}</p>
-                                </div>
-                                <p>{rooms} værelser • {plotSize} m²</p>
-                            </div>
-                        </section>
-                        <section className="flex flex-col justify-between">
-                            <p className="font-semibold text-lg text-end">Kr. {formatNumber(price)}</p>
-                            <FavouriteButton type={"favourites"} homeId={propertyId} />
-                        </section>
-                    </div>
-                </Link>
+                            <p>{rooms} værelser • {plotSize} m²</p>
+                        </div>
+                    </section>
+                    <section className="flex flex-col justify-between">
+                        <p className="font-semibold text-lg text-end">Kr. {formatNumber(price)}</p>
+                        <FavouriteButton type={"favourites"} homeId={propertyId} handleRemove={handleRemove} />
+                    </section>
+                </div>
             </article>
         )
     }
