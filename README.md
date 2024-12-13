@@ -1,4 +1,6 @@
 # Din Mægler
+##### Nikolaj
+
 #### Dette projekt bruger:
 - React med NextJS
 *Da jeg har meget erfaring i det og arbejder bedst i det.*
@@ -26,3 +28,4 @@ Jeg føler, jeg havde et godt overblik over opgaven fra starten og lavede de pas
 Generelt synes jeg min kode er god. Jeg gik tilbage til andre opgaver et par gange for at se, hvordan jeg måske kunne forbedre måden jeg skriver kode på. At søge efter fejl var nogle gange et problem, da de fleste svar var gamle, men jeg kunne godt finde ud af at konvertere dem til nyere metoder i mit hoved. På samme måde var ChatGPT heller ikke god til fejl, da den ikke ved de nyeste opdateringer, så jeg brugte den stort set ikke. Jeg blev også syg pludselig og kunne ikke arbejde på opgaven i et par dage.
 
 Generelt synes jeg, det er gået godt.
+
